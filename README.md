@@ -21,6 +21,9 @@ $ yarn start:dev
 ```
 
 Note: Before starting the server ,ensure the below keys are updated in the `.env`
+1. BOT_ID is bot id of lex bot
+2. BOT_ALIAS_ID is bot alias id of lex bot
+3. INDEX_ID is index id of Kendra
 ```
 BOT_ID=
 BOT_ALIAS_ID=
@@ -31,11 +34,15 @@ INDEX_ID=
 
 1. Configure your AWS credentials using `aws configure` command.
 2. Put aws access key and secret in terminal
+3. In serverless.yml file change env:ACCOUNTID to your account id to start the services
 2. `sls deploy`
 
 This command will deploy the APIs as lambda serverless functions and you will be given link to access the app
 
-Note: Ensure you have Serverless Framework installed. If not , you can install it globally using `npm install -g serverless`
+Note: 
+1. Ensure you have Serverless Framework installed. If not , you can install it globally using `npm install -g serverless`
+2. There's no need to add any access key or secret in .env or in code anywhere because AWS CLI will take care of every service once we configure that
+
 
 
 ## Test Serverless Locally
