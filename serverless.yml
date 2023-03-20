@@ -1,0 +1,55 @@
+service: nestjs-serverless
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-jetpack
+  - serverless-offline
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  architecture: arm64
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 128
+  logRetentionInDays: 1
+  timeout: 15
+  environment:
+    IAM: ${.env:IAM}
+
+
+custom:
+  dotenv:
+    path: .env
+
+functions:
+  api:
+    handler: dist/lambda.handler
+    events:
+      - httpApi:
+          method: any
+          path: /{proxy+}
+
+resources:
+  Resources:
+    MyLexBot:
+      Type: AWS::Lex::Bot
+      Properties:
+        Name: my-lex-bot
+        Description: My Lex bot
+        IdleSessionTTLInSeconds: 300
+        RoleArn: arn:aws:iam::{env:AccountID}:role/aws-service-role/lexv2.amazonaws.com/AWSServiceRoleForLexV2Bots_Lex
+        DataPrivacy:
+          ChildDirected: false
+
+    MyKendraIndex:
+      Type: AWS::Kendra::Index
+      Properties:
+        Name: my-kendra-index
+        RoleArn: arn:aws:iam::{env:AccountID}:role/service-role/AmazonKendra-us-east-1-Kendra
+        Description: My Kendra index
+        Edition: DEVELOPER_EDITION
+        CapacityUnits:
+          QueryCapacityUnits: 1
+          StorageCapacityUnits: 1
