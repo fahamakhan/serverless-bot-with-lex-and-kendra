@@ -8,7 +8,7 @@ export const handler = async (event, context) => {
  
 
   if (!cachedServer) {
-    const nestApp = await NestFactory.create(AppModule);
+    const nestApp = await NestFactory.create(AppModule,{ cors: true });
     await nestApp.init();
     cachedServer = serverlessExpress({
       app: nestApp.getHttpAdapter().getInstance(),
